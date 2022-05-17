@@ -1,6 +1,6 @@
 import { Calendario } from "../CalendarioSingleton/Calendario";
 
-//asignamos la variable calendario global a una instancia de la clase calendario
+//asignamos la constante calendario global a una instancia de la clase calendario
 const calendario = Calendario.getInstance();
 
 //este primer test es para verificar que, sin realizar una instancia de la clase externamente,
