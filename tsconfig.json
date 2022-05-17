@@ -1,0 +1,6 @@
+{
+    "compilerOptions": {"outDir": "salida"},
+    "include": [
+      "src/*", "tests/email.test.ts"
+    ]
+    }
