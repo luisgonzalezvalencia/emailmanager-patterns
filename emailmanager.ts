@@ -7,6 +7,7 @@ export class EmailManager {
     public BandejaEntrada: CarpetaComposite;
 
     constructor() {
+        //email manager la primera vez quee se instancia crea las carpetas de salida y entrada para el cliente
         this.BandejaEnviados = new CarpetaComposite("Bandeja de Enviados", 1);
         this.BandejaEntrada = new CarpetaComposite("Bandeja de Entrada", 2);
     }
