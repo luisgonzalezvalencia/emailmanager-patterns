@@ -50,3 +50,67 @@ test('Agregar la Bandeja de salida con la carpeta creada', () => {
 })
 
 
+test('create receptor to be defined', () => {
+  const receptor = new Contacto("Cosme fulanito", "cosmefulanito@gmail.com");
+  expect(receptor).toBeDefined();
+});
+
+test('create Remitente to be defined', () => {
+  const remitente = new Contacto("Juan Perez", "juanperez@gmail.com");
+  expect(remitente).toBeDefined();
+});
+
+
+test('create email for 1 receptor to be defined', () => {
+  const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  expect(email).toBeDefined();
+});
+
+test('create email for 3 receptors to be 3', () => {
+  const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  const receptor2 = new Contacto("Maxi Gonzalez", "maxi@gmail.com");
+  email.Para.push(receptor2); 
+  expect(email.Para.length).toBe(2);
+});
+
+test('create and send mail complete to equal true', () => {
+  const emailManager = new EmailManager();
+  const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  expect(emailManager.Enviar(email)).toBe(true);
+});
+
+test('create and send mail without Remitente to equal false', () => {
+  const emailManager = new EmailManager();
+  const email = new EmailLeaf("asunto1", "contenido1",null, [new Contacto("nombre2", "email2")]);
+  expect(emailManager.Enviar(email)).toBe(false);
+});
+
+test('create and send mail without Asunto to equal false', () => {
+  const emailManager = new EmailManager();
+  const email = new EmailLeaf("", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  expect(emailManager.Enviar(email)).toBe(false);
+});
+
+test('create and send mail without Contenido to equal false', () => {
+  const emailManager = new EmailManager();
+  const email = new EmailLeaf("asunto1", "", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  expect(emailManager.Enviar(email)).toBe(false);
+});
+
+test('create and send mail without Receptor to equal false', () => {
+  const emailManager = new EmailManager();
+  const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), []);
+  expect(emailManager.Enviar(email)).toBe(false);
+});
+
+test('read bandeja Enviados before send emails to equal 0', () => {
+  const emailManager = new EmailManager();
+  expect(emailManager.BandejaEnviados.CantidadEmails()).toBe(0);
+});
+
+test('read Bandeja Enviados after send emails to equal 1', () => {
+  const emailManager = new EmailManager();
+  const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  emailManager.Enviar(email)
+  expect(emailManager.BandejaEnviados.CantidadEmails()).toBe(1);
+});

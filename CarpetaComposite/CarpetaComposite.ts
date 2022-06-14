@@ -30,6 +30,17 @@ export class CarpetaComposite extends EmailComponent {
         }
     }
 
+
+    public Search(param: string): Array<EmailComponent>{
+        let resultados: Array<EmailComponent> = [];
+      this.emails.forEach(element => {
+            if (element.Asunto.includes(param)) {
+                resultados.push(element);
+            }
+      });
+      return resultados;
+    }
+
     constructor(nombre: string, identificador: number, asunto = "", contenido = "") {
         super(asunto, contenido);
         this.nombre = nombre;

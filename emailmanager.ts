@@ -1,13 +1,20 @@
-import { Email } from "./email";
+import { EmailLeaf } from "./CarpetaComposite/EmailLeaf";
+import { CarpetaComposite } from "./CarpetaComposite/CarpetaComposite";
+import { EmailComponent } from "./CarpetaComposite/EmailComponent";
 
 export class EmailManager {
-    public BandejaEnviados: Array<Email> = [];
-    public BandejaEntrada: Array<Email> = [];
+    public BandejaEnviados: CarpetaComposite;
+    public BandejaEntrada: CarpetaComposite;
 
-    public Enviar(email: Email): boolean {
+    constructor() {
+        this.BandejaEnviados = new CarpetaComposite("Bandeja de Enviados", 1);
+        this.BandejaEntrada = new CarpetaComposite("Bandeja de Entrada", 2);
+    }
+
+    public Enviar(email: EmailLeaf): boolean {
         //si tenemos todos los datos, agregamos el mail a bandeja de enviados
         if (email.Asunto != "" && email.Contenido != "" && email.Para.length > 0 && email.Remitente != null) {
-            this.BandejaEnviados.push(email);
+            this.BandejaEnviados.Add(email);
             return true;
         }
         //si no ingresa en el if, devolvemos false
@@ -15,8 +22,8 @@ export class EmailManager {
     }
 
 
-    public Buscar(string): Array<Email> {
-        return [];
+    public Buscar(param: string): Array<EmailComponent> {
+       return this.BandejaEnviados.Search(param);
     }
 
 }
