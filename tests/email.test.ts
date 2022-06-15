@@ -96,17 +96,17 @@ test('Al crear y enviar mail sin el remitente debe ser igual false', () => {
   expect(emailManager.Enviar(email)).toBe(false);
 });
 
-test('create and send mail without Asunto to equal false', () => {
+test('Al crear y enviar mail sin el Asunto debe ser igual false', () => {
   const email = new EmailLeaf("", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
   expect(emailManager.Enviar(email)).toBe(false);
 });
 
-test('create and send mail without Contenido to equal false', () => {
+test('Al crear y enviar mail sin el Contenido debe ser igual false', () => {
   const email = new EmailLeaf("asunto1", "", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
   expect(emailManager.Enviar(email)).toBe(false);
 });
 
-test('create and send mail without Receptor to equal false', () => {
+test('Al crear y enviar mail sin el Receptor debe ser igual false', () => {
   const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), []);
   expect(emailManager.Enviar(email)).toBe(false);
 });
