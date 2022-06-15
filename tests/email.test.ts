@@ -50,36 +50,36 @@ test('Agregar la Bandeja de salida con la carpeta creada', () => {
 })
 
 
-test('create receptor to be defined', () => {
+test('Al crear el receptor debe estar definido', () => {
   const receptor = new Contacto("Cosme fulanito", "cosmefulanito@gmail.com");
   expect(receptor).toBeDefined();
 });
 
-test('create Remitente to be defined', () => {
+test('Al crear el remitente debe estar definido', () => {
   const remitente = new Contacto("Juan Perez", "juanperez@gmail.com");
   expect(remitente).toBeDefined();
 });
 
 
-test('create email for 1 receptor to be defined', () => {
+test('Al crear email para 1 receptor debe estar definido', () => {
   const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
   expect(email).toBeDefined();
 });
 
-test('create email for 3 receptors to be 3', () => {
+test('Al crear email para 2 receptores la cantidad debe ser igual a 2 ', () => {
   const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
   const receptor2 = new Contacto("Maxi Gonzalez", "maxi@gmail.com");
   email.Para.push(receptor2); 
   expect(email.Para.length).toBe(2);
 });
 
-test('create and send mail complete to equal true', () => {
+test('Al Crear y enviar email completo debe ser igual true', () => {
   const emailManager = new EmailManager();
   const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
   expect(emailManager.Enviar(email)).toBe(true);
 });
 
-test('create and send mail without Remitente to equal false', () => {
+test('Al crear y enviar mail sin el remitente debe ser igual false', () => {
   const emailManager = new EmailManager();
   const email = new EmailLeaf("asunto1", "contenido1",null, [new Contacto("nombre2", "email2")]);
   expect(emailManager.Enviar(email)).toBe(false);
