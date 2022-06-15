@@ -2,7 +2,10 @@ import { EmailManager } from "../emailmanager";
 import { EmailLeaf } from "../CarpetaComposite/EmailLeaf";
 import { CarpetaComposite } from "../CarpetaComposite/CarpetaComposite";
 import { Contacto } from "../contacto";
+import { Calendario } from "../CalendarioSingleton/Calendario";
 
+//convertimos la instancia de email manager como singleton para tenerla disponible en todo el proyecto
+const emailManager = EmailManager.getInstance();
 
 test('Crear Mails en una Carpeta', () => {
   let emailTest1: EmailLeaf = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
@@ -45,8 +48,8 @@ test('Agregar la Bandeja de salida con la carpeta creada', () => {
   //se espera que tenga los 5 mails de la carpeta 1  + el mail que se agrego a la bandeja de salida
   expect(bandejaSalida.CantidadEmails()).toBe(5);
 
-    //se espera que la carpeta nueva solo tenga los 4 elementos iniciales
-    expect(carpetaNueva.CantidadEmails()).toBe(4);
+  //se espera que la carpeta nueva solo tenga los 4 elementos iniciales
+  expect(carpetaNueva.CantidadEmails()).toBe(4);
 })
 
 
@@ -69,48 +72,59 @@ test('Al crear email para 1 receptor debe estar definido', () => {
 test('Al crear email para 2 receptores la cantidad debe ser igual a 2 ', () => {
   const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
   const receptor2 = new Contacto("Maxi Gonzalez", "maxi@gmail.com");
-  email.Para.push(receptor2); 
+  email.Para.push(receptor2);
   expect(email.Para.length).toBe(2);
 });
 
+test('Al leer la bandeja Enviados antes de enviar emails, la cantidad debe ser igual a 0', () => {
+  expect(emailManager.BandejaEnviados.CantidadEmails()).toBe(0);
+});
+
+test('Al leer la Bandeja Enviados después de enviar un email, debe ser igual a 1', () => {
+  const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  emailManager.Enviar(email)
+  expect(emailManager.BandejaEnviados.CantidadEmails()).toBe(1);
+});
+
 test('Al Crear y enviar email completo debe ser igual true', () => {
-  const emailManager = new EmailManager();
   const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
   expect(emailManager.Enviar(email)).toBe(true);
 });
 
 test('Al crear y enviar mail sin el remitente debe ser igual false', () => {
-  const emailManager = new EmailManager();
-  const email = new EmailLeaf("asunto1", "contenido1",null, [new Contacto("nombre2", "email2")]);
+  const email = new EmailLeaf("asunto1", "contenido1", null, [new Contacto("nombre2", "email2")]);
   expect(emailManager.Enviar(email)).toBe(false);
 });
 
 test('create and send mail without Asunto to equal false', () => {
-  const emailManager = new EmailManager();
   const email = new EmailLeaf("", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
   expect(emailManager.Enviar(email)).toBe(false);
 });
 
 test('create and send mail without Contenido to equal false', () => {
-  const emailManager = new EmailManager();
   const email = new EmailLeaf("asunto1", "", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
   expect(emailManager.Enviar(email)).toBe(false);
 });
 
 test('create and send mail without Receptor to equal false', () => {
-  const emailManager = new EmailManager();
   const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), []);
   expect(emailManager.Enviar(email)).toBe(false);
 });
 
-test('read bandeja Enviados before send emails to equal 0', () => {
-  const emailManager = new EmailManager();
-  expect(emailManager.BandejaEnviados.CantidadEmails()).toBe(0);
+test('Al enviar un email, la fecha de envio debe ser la fecha actual', () => {
+  const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  let calendario = Calendario.getInstance();
+  emailManager.Enviar(email);
+  expect(email.getFechaEnvio()).toEqual(calendario.getFecha());
 });
 
-test('read Bandeja Enviados after send emails to equal 1', () => {
-  const emailManager = new EmailManager();
+test('Al leer un mail de la bandeja de entrada, marcarlo como leeido', () => {
   const email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
-  emailManager.Enviar(email)
-  expect(emailManager.BandejaEnviados.CantidadEmails()).toBe(1);
+  //simuamos que me mandaron un mail y me llegó
+  email.setEmailEnviado();
+  emailManager.BandejaEntrada.Add(email);
+  //simulamos que leemos el mail
+  let calendario = Calendario.getInstance();
+  emailManager.BandejaEntrada.OpenEmail(email);
+  expect(email.getFechaLeido()).toEqual(calendario.getFecha());
 });

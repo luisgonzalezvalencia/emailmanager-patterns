@@ -1,6 +1,8 @@
 import { EmailComponent } from './EmailComponent';
+import { EmailLeaf } from './EmailLeaf';
 
 export class CarpetaComposite extends EmailComponent {
+
     private emails: EmailComponent[] = [];
     public nombre: string;
     public identificador: number;
@@ -31,14 +33,19 @@ export class CarpetaComposite extends EmailComponent {
     }
 
 
-    public Search(param: string): Array<EmailComponent>{
+    public Search(param: string): Array<EmailComponent> {
         let resultados: Array<EmailComponent> = [];
-      this.emails.forEach(element => {
+        this.emails.forEach(element => {
             if (element.Asunto.includes(param)) {
                 resultados.push(element);
             }
-      });
-      return resultados;
+        });
+        return resultados;
+    }
+
+    OpenEmail(email: EmailLeaf) {
+        email.SetEmailAbierto();
+        return email;
     }
 
     constructor(nombre: string, identificador: number, asunto = "", contenido = "") {
