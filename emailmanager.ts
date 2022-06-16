@@ -1,15 +1,15 @@
 import { EmailLeaf } from "./CarpetaComposite/EmailLeaf";
 import { CarpetaComposite } from "./CarpetaComposite/CarpetaComposite";
 import { EmailComponent } from "./CarpetaComposite/EmailComponent";
-import { MailStrategy, MailResponseStrategy } from "./MailStrategy/interfaces/MailStrategy.interface";
+import { IMailStrategy, IMailResponseStrategy } from "./MailStrategy/interfaces/MailStrategy.interface";
 import { MailNormalStrategy } from "./MailStrategy/MailNormal.strategy";
 
 export class EmailManager {
     private static instance: EmailManager;
     public BandejaEnviados: CarpetaComposite;
     public BandejaEntrada: CarpetaComposite;
-    private context?: MailStrategy;        //por default si no tenemos el contexto, usamos el envio normal
-    ColaEnviosTardios: EmailLeaf[];
+    private context?: IMailStrategy;        //por default si no tenemos el contexto, usamos el envio normal
+    private ColaEnviosTardios: EmailLeaf[] = [];
 
     private constructor() {
         //email manager la primera vez quee se instancia crea las carpetas de salida y entrada para el cliente, y la estrategia por default
@@ -29,7 +29,7 @@ export class EmailManager {
     }
 
     //seteo la estrategia a utilizar
-    public setStrategy(strategy: MailStrategy) {
+    public setStrategy(strategy: IMailStrategy) {
         this.context = strategy;
     }
 
@@ -40,14 +40,11 @@ export class EmailManager {
             //guardamos la respuesta del envio
             let respuesta = this.context.sendMail(email);
 
-            this.BandejaEnviados.Add(email);
-
-
-            if (!respuesta.estado) {
-                email.setFechaEnvio(respuesta.fechaenvio);
-                this.AnadirEmailCola(email);
+            //en caso de tener una estrategia con retraso, queda en  cola de tareas
+            //si se envio, añadimos a bandeja de enviados
+            if (respuesta.estado) {
+                this.BandejaEnviados.Add(email);
             }
-
             return true;
         }
         //si no ingresa en el if, devolvemos false

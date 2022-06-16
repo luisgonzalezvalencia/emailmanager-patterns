@@ -1,10 +1,10 @@
 import { EmailLeaf } from '../../CarpetaComposite/EmailLeaf';
 
-export interface MailResponseStrategy{
+export interface IMailResponseStrategy{
     fechaenvio: string;
     estado: boolean;
 }
 
-export interface MailStrategy{
-    sendMail(mail: EmailLeaf): MailResponseStrategy;
+export interface IMailStrategy{
+    sendMail(mail: EmailLeaf): IMailResponseStrategy;
 }

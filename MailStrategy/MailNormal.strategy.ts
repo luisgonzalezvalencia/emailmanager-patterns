@@ -1,8 +1,8 @@
 import { EmailLeaf } from "../CarpetaComposite/EmailLeaf";
-import { MailResponseStrategy, MailStrategy } from "./interfaces/MailStrategy.interface";
+import { IMailResponseStrategy, IMailStrategy } from "./interfaces/MailStrategy.interface";
 
-export class MailNormalStrategy implements MailStrategy {
-    sendMail(email: EmailLeaf): MailResponseStrategy {
+export class MailNormalStrategy implements IMailStrategy {
+    sendMail(email: EmailLeaf): IMailResponseStrategy {
         //la estrategia normal es enviar el mail y marcarlo como enviado
         email.setEmailEnviado();
         return { 
