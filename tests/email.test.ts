@@ -4,7 +4,7 @@ import { CarpetaComposite } from "../CarpetaComposite/CarpetaComposite";
 import { Contacto } from "../contacto";
 import { Calendario } from "../CalendarioSingleton/Calendario";
 import { MailRetrasoStrategy } from "../MailStrategy/MailRetraso.strategy";
-import { TaskManager } from "../TaskManager";
+import { TaskManager } from "../taskmanager";
 import { MailNormalStrategy } from "../MailStrategy/MailNormal.strategy";
 
 //convertimos la instancia de email manager como singleton para tenerla disponible en todo el proyecto
