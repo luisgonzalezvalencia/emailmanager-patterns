@@ -3,7 +3,7 @@ import { CarpetaComposite } from "./CarpetaComposite/CarpetaComposite";
 import { EmailComponent } from "./CarpetaComposite/EmailComponent";
 import { IMailStrategy, IMailResponseStrategy } from "./MailStrategy/interfaces/MailStrategy.interface";
 import { MailNormalStrategy } from "./MailStrategy/MailNormal.strategy";
-import { TaskManager } from "./TaskManager";
+import { TaskManager } from "./taskmanager";
 import { Calendario } from "./CalendarioSingleton/Calendario";
 
 export class EmailManager {

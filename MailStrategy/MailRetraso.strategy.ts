@@ -1,7 +1,7 @@
 import { EmailLeaf } from "../CarpetaComposite/EmailLeaf";
 import { IMailConRetrasoStrategy } from "./interfaces/MailConRetrasoStrategy.interface";
 import { IMailResponseStrategy } from "./interfaces/MailStrategy.interface";
-import { TaskManager } from "../TaskManager";
+import { TaskManager } from "../taskmanager";
 
 export class MailRetrasoStrategy implements IMailConRetrasoStrategy {
     fechaEnvio: string;
