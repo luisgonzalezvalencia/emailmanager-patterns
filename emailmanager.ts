@@ -1,20 +1,25 @@
 import { EmailLeaf } from "./CarpetaComposite/EmailLeaf";
 import { CarpetaComposite } from "./CarpetaComposite/CarpetaComposite";
 import { EmailComponent } from "./CarpetaComposite/EmailComponent";
+import { MailStrategy, MailResponseStrategy } from "./MailStrategy/interfaces/MailStrategy.interface";
+import { MailNormalStrategy } from "./MailStrategy/MailNormal.strategy";
 
 export class EmailManager {
     private static instance: EmailManager;
     public BandejaEnviados: CarpetaComposite;
     public BandejaEntrada: CarpetaComposite;
+    private context?: MailStrategy;        //por default si no tenemos el contexto, usamos el envio normal
+    ColaEnviosTardios: EmailLeaf[];
 
     private constructor() {
-        //email manager la primera vez quee se instancia crea las carpetas de salida y entrada para el cliente
+        //email manager la primera vez quee se instancia crea las carpetas de salida y entrada para el cliente, y la estrategia por default
         this.BandejaEnviados = new CarpetaComposite("Bandeja de Enviados", 1);
         this.BandejaEntrada = new CarpetaComposite("Bandeja de Entrada", 2);
+        this.context = new MailNormalStrategy();
     }
 
-     //el metodo estatico permite acceder a la instancia sin necesidad de instanciarla
-     public static getInstance(): EmailManager {
+    //el metodo estatico permite acceder a la instancia sin necesidad de instanciarla
+    public static getInstance(): EmailManager {
         //si la instancia no existe, la creamos
         if (!EmailManager.instance) {
             EmailManager.instance = new EmailManager();
@@ -23,11 +28,26 @@ export class EmailManager {
         return EmailManager.instance;
     }
 
+    //seteo la estrategia a utilizar
+    public setStrategy(strategy: MailStrategy) {
+        this.context = strategy;
+    }
+
     public Enviar(email: EmailLeaf): boolean {
         //si tenemos todos los datos, agregamos el mail a bandeja de enviados
         if (email.Asunto != "" && email.Contenido != "" && email.Para.length > 0 && email.Remitente != null) {
+
+            //guardamos la respuesta del envio
+            let respuesta = this.context.sendMail(email);
+
             this.BandejaEnviados.Add(email);
-            email.setEmailEnviado();
+
+
+            if (!respuesta.estado) {
+                email.setFechaEnvio(respuesta.fechaenvio);
+                this.AnadirEmailCola(email);
+            }
+
             return true;
         }
         //si no ingresa en el if, devolvemos false
@@ -41,6 +61,11 @@ export class EmailManager {
 
     public BuscarEnRecibidos(param: string): Array<EmailComponent> {
         return this.BandejaEntrada.Search(param);
+    }
+
+
+    private AnadirEmailCola(email: EmailLeaf) {
+        this.ColaEnviosTardios.push(email);
     }
 
 }

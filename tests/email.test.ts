@@ -128,3 +128,13 @@ test('Al leer un mail de la bandeja de entrada, marcarlo como leeido', () => {
   emailManager.BandejaEntrada.OpenEmail(email);
   expect(email.getFechaLeido()).toEqual(calendario.getFecha());
 });
+
+
+test('Enviar mail estrategia con retraso, debe crear una tarea para enviarla en cierta fecha', () => {
+
+})
+
+
+test('Enviar mail con estrategia normal, debe mandar el mail inmediatamente sin crear tarea', () => {
+
+})

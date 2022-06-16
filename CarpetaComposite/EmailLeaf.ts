@@ -5,6 +5,7 @@ import { EmailComponent } from './EmailComponent';
 export class EmailLeaf extends EmailComponent {
 
 
+
     public Remitente: Contacto = null;
     public Para: Array<Contacto> = [];
     private FechaEnvio: string;
@@ -37,5 +38,14 @@ export class EmailLeaf extends EmailComponent {
     getFechaLeido(): any {
         return this.FechaEnvio;
     }
+
+    setFechaEnvio(fechaenvio: string) {
+        this.FechaEnvio = fechaenvio;
+    }
+
+    getEstado(): boolean {
+        return this.Estado;
+    }
+    
 
 }
