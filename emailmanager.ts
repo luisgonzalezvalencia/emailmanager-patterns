@@ -3,13 +3,15 @@ import { CarpetaComposite } from "./CarpetaComposite/CarpetaComposite";
 import { EmailComponent } from "./CarpetaComposite/EmailComponent";
 import { IMailStrategy, IMailResponseStrategy } from "./MailStrategy/interfaces/MailStrategy.interface";
 import { MailNormalStrategy } from "./MailStrategy/MailNormal.strategy";
+import { TaskManager } from "./TaskManager";
+import { Calendario } from "./CalendarioSingleton/Calendario";
 
 export class EmailManager {
+
     private static instance: EmailManager;
     public BandejaEnviados: CarpetaComposite;
     public BandejaEntrada: CarpetaComposite;
     private context?: IMailStrategy;        //por default si no tenemos el contexto, usamos el envio normal
-    private ColaEnviosTardios: EmailLeaf[] = [];
 
     private constructor() {
         //email manager la primera vez quee se instancia crea las carpetas de salida y entrada para el cliente, y la estrategia por default
@@ -60,9 +62,22 @@ export class EmailManager {
         return this.BandejaEntrada.Search(param);
     }
 
+    public ProcesarListaTareas() {
+        let taskManager = TaskManager.getInstance();
+        let listaEnviar: EmailLeaf[] = [];
+        taskManager.getTask().forEach(task => {
+            if (task.getFechaEnvio() == Calendario.getInstance().getFecha()) {
+                listaEnviar.push(task);
+            }
+        });
 
-    private AnadirEmailCola(email: EmailLeaf) {
-        this.ColaEnviosTardios.push(email);
+        listaEnviar.forEach(task => {
+            taskManager.DeleteTask(task);
+            this.setStrategy(new MailNormalStrategy());
+            this.Enviar(task);
+        });
+
+        return listaEnviar.length;
     }
 
 }

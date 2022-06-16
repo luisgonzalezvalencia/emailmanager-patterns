@@ -155,3 +155,15 @@ test('Enviar mail con estrategia normal, debe mandar el mail inmediatamente sin 
   expect(email.getFechaEnvio()).toEqual(calendario.getFecha());
 })
 
+test('Procesar la lista de tareas, debe enviar todos los mails que tengan la fecha actual', () => {
+  let taskManager = TaskManager.getInstance();
+  let email = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1@gmail.com"), [new Contacto("nombre2", "email2@gmail.com")]);
+  let estrategia = new MailRetrasoStrategy();
+  //simulamos con ello que llego el dia del mail con estrategia de retraso
+  estrategia.fechaEnvio = Calendario.getInstance().getFechaMasDias(0);
+  emailManager.setStrategy(estrategia);
+  emailManager.Enviar(email);
+  //simulamos que llego el dia de hoy
+  let cantidadMailsEnviados = emailManager.ProcesarListaTareas();
+  expect(cantidadMailsEnviados).toBe(1);
+})
