@@ -1,7 +1,4 @@
 export abstract class EmailComponent {
-    setEmailEnviado() {
-        throw new Error("Method not implemented.");
-    }
     public Asunto: string = "";
     public Contenido: string = "";
 
